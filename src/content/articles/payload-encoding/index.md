@@ -26,7 +26,7 @@ I encoded a typical order in all three: 3 items with modifiers, a nested address
 - Protobuf: 470 bytes, 0.9 µs to encode, 1.4 µs to decode
 - Avro: 417 bytes, 26.6 µs to encode, 19.1 µs to decode
 
-![Bar chart, bytes for the same order: JSON 1,076 (461 of them field names), Protobuf 470, Avro 417, JSON with gzip 516.](./1-size.png)
+![Bar chart, bytes for the same order: JSON 1,076 (461 of them field names), Protobuf 470, Avro 417, JSON with gzip 516.](/articles/payload-encoding/1-size.png)
 
 Almost half of this JSON is just field names: 43%. Protobuf cut the order to 44% and was about 10x faster. Nice. Now stretch it to real traffic. Between your own services, AWS charges $0.01/GB on each side when a call crosses availability zones. I assumed every call does. Inside one zone it's free.
 
@@ -34,7 +34,7 @@ Almost half of this JSON is just field names: 43%. Protobuf cut the order to 44%
 - 1,000 RPS: $377 a year, 0.023 cores
 - 10,000 RPS: $3,770 a year, 0.23 cores
 
-![606 bytes saved per request with Protobuf instead of JSON, AWS cross-AZ: 1,000 RPS saves $377 a year, 10,000 RPS saves $3,770 a year.](./2-scale.png)
+![606 bytes saved per request with Protobuf instead of JSON, AWS cross-AZ: 1,000 RPS saves $377 a year, 10,000 RPS saves $3,770 a year.](/articles/payload-encoding/2-scale.png)
 
 At 1,000 RPS, you saved about $380 a year. Cool, that's one team dinner. Nobody gets promoted for a dinner. At 10,000 RPS, it's about $3,800 a year. A nice team trip. Still not a promotion.
 
@@ -48,7 +48,7 @@ Protobuf isn't the first step. I started again from an untrimmed order, the way 
 - Level 3, gzip: 510 bytes (19%)
 - Level 4, Protobuf: 470 bytes (18%)
 
-![Bar chart, cheapest fix first: untrimmed JSON 2,672 bytes; trim fields 1,076 (-60%); compact 989 (-63%); gzip 510 (-81%); Protobuf 470 (-82%, needs a migration).](./4-levels.png)
+![Bar chart, cheapest fix first: untrimmed JSON 2,672 bytes; trim fields 1,076 (-60%); compact 989 (-63%); gzip 510 (-81%); Protobuf 470 (-82%, needs a migration).](/articles/payload-encoding/4-levels.png)
 
 Trimming alone cut 60%. No new tools, no migration. Gzip took it to 19% with one config line. Protobuf, the big migration, got 18%. One more point.
 
@@ -68,7 +68,7 @@ So the real question is: what happens when the schema changes?
 
 I tested that too. I removed one field, `notes`, and added another, `tip`. Then I let old readers read new data, and new readers read old data.
 
-![Schema change test, v1 with notes vs v2 with tip. JSON fails both ways. Protobuf works both ways, but a reused field number fails silently. Avro works one way, and a wrong schema fails silently.](./3-schema-change.png)
+![Schema change test, v1 with notes vs v2 with tip. JSON fails both ways. Protobuf works both ways, but a reused field number fails silently. Avro works one way, and a wrong schema fails silently.](/articles/payload-encoding/3-schema-change.png)
 
 - **JSON:** `KeyError` on the first strict `d["notes"]`. It works only if every reader uses `.get()` with a default. The format doesn't care. The rule lives in every reader's code, and nothing enforces it.
 - **Protobuf:** both directions worked. Unknown fields are skipped, missing fields get defaults. Then I gave the new field the old field's number. No error. Just a wrong value.

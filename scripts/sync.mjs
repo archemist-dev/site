@@ -1,12 +1,15 @@
 // Copies articles from the Archemist vault into src/content/articles/.
 //
-//   npm run sync                         every paste-ready note in Topics/ and Published/
+//   npm run sync                         every published paste-ready note in Topics/ and Published/
 //   npm run sync -- "Your Payload Is Too Big"   one topic
 //   npm run sync -- "<topic>" --slug payload-encoding
+//   npm run sync -- --drafts             also unpublished ones, as drafts (local preview; don't commit)
 //
 // Source: "<topic> - paste-ready.md" (title, cover, body with [IMAGE n] markers) and the
 // master note next to it (publish_date, pillar, LinkedIn URL). Nothing else leaves the vault.
-// An article stays a draft until its master note holds the LinkedIn article URL.
+// An article is published once its master note holds the LinkedIn article URL; before that
+// it is skipped, so its text never reaches the public repo early.
+// Diagrams go to public/articles/<slug>/ as plain PNGs (Medium's importer needs real image URLs).
 // Vault path: ARCHEMIST_VAULT, or ../../Archemist from this repo.
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
@@ -16,10 +19,13 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const VAULT = resolve(process.env.ARCHEMIST_VAULT ?? join(ROOT, '..', '..', 'Archemist'));
 const OUT = join(ROOT, 'src', 'content', 'articles');
+const PUBLIC = join(ROOT, 'public', 'articles');
 const FOLDERS = ['Topics', 'Published'];
 const SUFFIX = ' - paste-ready.md';
 
 const args = process.argv.slice(2);
+const drafts = args.includes('--drafts');
+if (drafts) args.splice(args.indexOf('--drafts'), 1);
 const slugFlag = args.indexOf('--slug');
 const slugArg = slugFlag >= 0 ? args.splice(slugFlag, 2)[1] : undefined;
 const topicArg = args[0];
@@ -53,10 +59,17 @@ function syncTopic({ dir, file }) {
 	const labs = body.match(/https:\/\/github\.com\/archemist-dev\/labs\/tree\/main\/[\w.-]+/)?.[0];
 	const slug = slugArg ?? (labs ? basename(labs).replace(/^\d+-/, '') : kebab(topic));
 	if (!meta.publish_date) fail(`${master.file}: no publish_date.`);
+	if (!linkedin && !drafts) {
+		console.log(`skip   ${topic} (no LinkedIn URL yet)`);
+		return;
+	}
 
 	const folder = join(OUT, slug);
-	rmSync(folder, { recursive: true, force: true });
-	mkdirSync(folder, { recursive: true });
+	const images = join(PUBLIC, slug);
+	for (const dir of [folder, images]) {
+		rmSync(dir, { recursive: true, force: true });
+		mkdirSync(dir, { recursive: true });
+	}
 	copyImage(coverPath, join(folder, 'cover.png'));
 
 	const lines = body.split(/\r?\n/);
@@ -67,8 +80,8 @@ function syncTopic({ dir, file }) {
 			const altLine = lines[i + 1]?.match(/^Alt text:\s*(.+)$/);
 			if (!altLine) fail(`${file}: no "Alt text:" line under ${lines[i]}`);
 			const name = imageName(image[1]);
-			copyImage(image[1], join(folder, name));
-			out.push(`![${altLine[1].replace(/[[\]]/g, '')}](./${name})`);
+			copyImage(image[1], join(images, name));
+			out.push(`![${altLine[1].replace(/[[\]]/g, '')}](/articles/${slug}/${name})`);
 			i++;
 			continue;
 		}

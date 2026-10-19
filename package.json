@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/absolute-images.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "sync": "node scripts/sync.mjs"

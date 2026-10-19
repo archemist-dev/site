@@ -28,7 +28,7 @@ A **dependency** is any place where one module touches another: a table it reads
 - **notifications:** 2 dependencies, 5 events, 5 writes, doesn't block orders
 - **couriers:** 3 dependencies, 4 calls, 151 writes, doesn't block orders
 
-![Bar chart, dependencies to cut per module and whether it blocks orders: orders 10, yes; payments 3, yes; menu 2, yes; notifications 2, no; couriers 3, no.](./1-dependencies.png)
+![Bar chart, dependencies to cut per module and whether it blocks orders: orders 10, yes; payments 3, yes; menu 2, yes; notifications 2, no; couriers 3, no.](/articles/extract-first/1-dependencies.png)
 
 Orders has 10 dependencies, all on the path that takes the money. Pull it out first, and you cut all of them at once. In my experience, that's where migrations stall.
 
@@ -48,13 +48,13 @@ At 10,000 orders a day, that's 548M location logs a year, about 55 GB, 15x more 
 
 Try the cheap step first: keep only the last 30 days, or split the table by day and drop old days. That can keep it in one Postgres for a long time.
 
-![Bar chart, rows per year at 10,000 orders a day: location logs 548M, order data 36.5M. Per order 150 vs 10, 15x.](./2-growth.png)
+![Bar chart, rows per year at 10,000 orders a day: location logs 548M, order data 36.5M. Per order 150 vs 10, 15x.](/articles/extract-first/2-growth.png)
 
 Assumptions: a GPS point every 10 seconds, 25 minutes per delivery, 15% of the day's orders in the peak hour, about 100 bytes per row, kept for a year.
 
 "You built the model, so you rigged it." Fair. So I changed one thing: how couriers gets the delivery address. The pick didn't change. Only the traffic did:
 
-![Flow diagram: couriers asking orders for the address on every ETA refresh, 50 lookups per order, versus orders copying the address to couriers once at assignment, 1 lookup.](./4-copy-once.png)
+![Flow diagram: couriers asking orders for the address on every ETA refresh, 50 lookups per order, versus orders copying the address to couriers once at assignment, 1 lookup.](/articles/extract-first/4-copy-once.png)
 
 Copy the address once, when the courier is assigned, and the ETA reads its own copy: 1 address lookup per order. Ask orders on every refresh instead, and it's 50.
 
@@ -105,7 +105,7 @@ Ask three questions about every module:
 - **Can it block a critical flow without a fallback?** Taking orders, payments, delivery. If it runs inside one with nothing to fall back on, not yet.
 - **Does it have its own reason to move?** Its own load, data growth or release pace.
 
-![Scatter chart, dependencies to cut against writes per order: couriers at 3 and 151 in the extract-first corner; notifications at 2 and 5, safe; menu at 2 and 0, payments at 3 and 1, orders at 10 and 16, all blocking orders.](./3-matrix.png)
+![Scatter chart, dependencies to cut against writes per order: couriers at 3 and 151 in the extract-first corner; notifications at 2 and 5, safe; menu at 2 and 0, payments at 3 and 1, orders at 10 and 16, all blocking orders.](/articles/extract-first/3-matrix.png)
 
 Couriers answered all three: its critical flow, dispatch, had a manual fallback. Notifications, sent as an event, answers two, so it's a fine second. Orders goes later.
 
