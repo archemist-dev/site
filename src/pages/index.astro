@@ -1,0 +1,76 @@
+---
+import ArticleCard from '../components/ArticleCard.astro';
+import { LINKS, SITE_DESCRIPTION, SITE_TAGLINE } from '../consts';
+import Base from '../layouts/Base.astro';
+import { getArticles } from '../lib/articles';
+
+const articles = (await getArticles()).slice(0, 7);
+const [latest, ...rest] = articles;
+---
+
+<Base description={SITE_DESCRIPTION}>
+	<section class="hero">
+		<p class="eyebrow">SOFTWARE ARCHITECTURE · SYSTEM DESIGN · TESTED</p>
+		<h1>{SITE_TAGLINE}</h1>
+		<div class="rule"></div>
+		<p class="lead">
+			Practical architecture from a solutions architect who makes these calls in production. Each article
+			takes a common belief, tests it with code you can run yourself, and ends with the decision, its trade-off
+			and one principle.
+		</p>
+		<div class="buttons">
+			{LINKS.newsletter && <a class="button primary" href={LINKS.newsletter}>Subscribe on LinkedIn</a>}
+			<a class="button" href={LINKS.youtube}>YouTube</a>
+			<a class="button" href={LINKS.telegram}>Telegram (UZ/RU)</a>
+		</div>
+	</section>
+
+	{latest && (
+		<section>
+			<h2 class="section-title eyebrow">LATEST</h2>
+			<ul class="list">
+				<ArticleCard article={latest} featured />
+			</ul>
+			{rest.length > 0 && (
+				<ul class="grid">
+					{rest.map((article) => <ArticleCard article={article} />)}
+				</ul>
+			)}
+			<p class="all"><a href="/articles/">All articles →</a></p>
+		</section>
+	)}
+</Base>
+
+<style>
+	.hero {
+		max-width: 760px;
+		padding: 2.5rem 0 3.5rem;
+	}
+	.hero .eyebrow {
+		margin: 0 0 1rem;
+	}
+	.lead {
+		color: var(--muted);
+		font-size: 1.1rem;
+		margin-bottom: 1.6rem;
+	}
+	.section-title {
+		margin: 0 0 1.2rem;
+		font-weight: 500;
+	}
+	.list,
+	.grid {
+		margin: 0;
+		padding: 0;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 2.5rem 2rem;
+		margin-top: 3rem;
+	}
+	.all {
+		margin-top: 2.5rem;
+		font-weight: 600;
+	}
+</style>

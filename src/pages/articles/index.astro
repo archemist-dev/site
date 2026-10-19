@@ -1,0 +1,25 @@
+---
+import ArticleCard from '../../components/ArticleCard.astro';
+import Base from '../../layouts/Base.astro';
+import { getArticles } from '../../lib/articles';
+
+const articles = await getArticles();
+---
+
+<Base title="Articles" description="Every Archemist article: one architecture decision a week, tested before it's written.">
+	<h1>Articles</h1>
+	<div class="rule"></div>
+	<ul class="grid">
+		{articles.map((article) => <ArticleCard article={article} />)}
+	</ul>
+</Base>
+
+<style>
+	.grid {
+		margin: 2rem 0 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 2.5rem 2rem;
+	}
+</style>

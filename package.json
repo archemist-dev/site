@@ -1,0 +1,22 @@
+{
+  "name": "archemist-site",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "sync": "node scripts/sync.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.1",
+    "sharp": "^0.35.0"
+  },
+  "private": true
+}

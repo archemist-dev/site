@@ -1,0 +1,41 @@
+---
+import { LINKS } from '../consts';
+
+interface Props {
+	linkedin?: string;
+}
+
+const { linkedin } = Astro.props;
+---
+
+<aside>
+	<p class="eyebrow">ARCHEMIST</p>
+	<p class="pitch">One architecture decision a week, tested before it's written.</p>
+	<div class="buttons">
+		{LINKS.newsletter && <a class="button primary" href={LINKS.newsletter}>Subscribe on LinkedIn</a>}
+		<a class="button" href={LINKS.youtube}>YouTube</a>
+		<a class="button" href={LINKS.telegram}>Telegram (UZ/RU)</a>
+		{linkedin && <a class="button" href={linkedin}>Discuss on LinkedIn</a>}
+	</div>
+</aside>
+
+<style>
+	aside {
+		margin-top: 3rem;
+		padding: 1.5rem;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		background: var(--surface);
+	}
+	.eyebrow {
+		margin: 0 0 0.3rem;
+		color: var(--gold);
+		letter-spacing: 0.22em;
+		font-weight: 700;
+	}
+	.pitch {
+		font-weight: 700;
+		font-size: 1.1rem;
+		margin: 0 0 1rem;
+	}
+</style>

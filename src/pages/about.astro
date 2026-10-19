@@ -1,0 +1,56 @@
+---
+import Subscribe from '../components/Subscribe.astro';
+import { LINKS } from '../consts';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About" description="Archemist is practical software architecture by Javlon, a solutions architect: the books read, the tech tested, explained in plain language.">
+	<div class="prose">
+		<h1>About</h1>
+		<div class="rule"></div>
+		<p class="lead">
+			Archemist is practical software architecture and system design by Javlon, a solutions architect. I read
+			the books, test the tech, and explain it in plain language.
+		</p>
+		<p>
+			Every piece starts from the problem that made someone invent a technology, not from the technology. A
+			common belief gets an honest test, and the article ends with the decision, its trade-off and one
+			principle. No hype, no gatekeeping, and no big-tech scale: the numbers are for teams running 100 to
+			10,000 requests per second.
+		</p>
+
+		<h2>What you'll find</h2>
+		<ul>
+			<li><strong>Under the Hood</strong>: databases, encodings and data internals.</li>
+			<li><strong>Architecture in Production</strong>: monoliths, services and the messy middle.</li>
+			<li><strong>System Design</strong>: judgment calls and what breaks after the whiteboard.</li>
+			<li><strong>AI Engineering</strong>: AI systems and tools, judged by an architect.</li>
+			<li><strong>Career</strong>: seniority, growth paths and how architects work.</li>
+		</ul>
+
+		<h2>Tests you can re-run</h2>
+		<p>
+			Every number in an article comes from a script in the <a href={LINKS.github}>labs repository</a>: pinned
+			dependencies, synthetic data, run on a named cloud server. Clone it and check the results yourself.
+		</p>
+
+		<h2>Contact</h2>
+		<p>
+			<a href={LINKS.email}>hello@archemist.dev</a>. Short videos in English on YouTube; the same diagrams in Uzbek
+			and Russian on Telegram.
+		</p>
+
+		<Subscribe />
+	</div>
+</Base>
+
+<style>
+	.prose {
+		max-width: var(--measure);
+		margin: 0 auto;
+		padding-top: 1.5rem;
+	}
+	.lead {
+		font-size: 1.15rem;
+	}
+</style>

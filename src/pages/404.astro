@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found" description="This page doesn't exist.">
+	<div class="box">
+		<p class="eyebrow">404</p>
+		<h1>This page didn't survive the migration.</h1>
+		<div class="rule"></div>
+		<p>The link may be old or mistyped.</p>
+		<div class="buttons">
+			<a class="button primary" href="/articles/">Read the articles</a>
+			<a class="button" href="/">Home</a>
+		</div>
+	</div>
+</Base>
+
+<style>
+	.box {
+		max-width: var(--measure);
+		padding: 3rem 0;
+	}
+	p {
+		color: var(--muted);
+	}
+</style>
