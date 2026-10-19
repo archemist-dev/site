@@ -5,6 +5,7 @@
 	--surface: #23262b;
 	--border: #31353b;
 	--text: #f2efe9;
+	--body: #e4e0d8;
 	--muted: #9ca3af;
 	--gold: #d4a017;
 	--measure: 680px;
@@ -129,6 +130,27 @@ img {
 	max-width: 100%;
 	height: auto;
 	display: block;
+}
+
+/* Long reading: serif body, Inter headings and boxes. */
+.prose {
+	font-family: var(--font-serif);
+	font-size: 1.15rem;
+	line-height: 1.7;
+	color: var(--body);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose aside {
+	font-family: var(--font-inter);
+	color: var(--text);
+}
+
+.prose aside {
+	font-size: 1rem;
+	line-height: 1.65;
 }
 
 /* The thin gold line under a title, as on the diagrams. */

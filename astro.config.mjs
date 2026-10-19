@@ -20,6 +20,14 @@ export default defineConfig({
 		},
 		{
 			provider: fontProviders.google(),
+			name: 'Source Serif 4',
+			cssVariable: '--font-serif',
+			weights: [400, 600],
+			styles: ['normal', 'italic'],
+			fallbacks: ['Georgia', 'serif'],
+		},
+		{
+			provider: fontProviders.google(),
 			name: 'JetBrains Mono',
 			cssVariable: '--font-mono',
 			weights: [400, 500, 700],
