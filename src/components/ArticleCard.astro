@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { PILLARS } from '../consts';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	article: CollectionEntry<'articles'>;
+	featured?: boolean;
+}
+
+const { article, featured = false } = Astro.props;
+const { title, description, pubDate, pillar, cover, draft } = article.data;
+---
+
+<li class:list={{ featured }}>
+	<a href={`/articles/${article.id}/`}>
+		<Image src={cover} alt="" widths={[480, 720, 1080]} sizes="(max-width: 720px) 100vw, 540px" loading={featured ? 'eager' : 'lazy'} />
+		<div class="body">
+			<p class="eyebrow">
+				<FormattedDate date={pubDate} /> · {PILLARS[pillar] ?? pillar}{draft && ' · DRAFT'}
+			</p>
+			<h2>{title}</h2>
+			<p class="description">{description}</p>
+		</div>
+	</a>
+</li>
+
+<style>
+	li {
+		list-style: none;
+		margin: 0;
+	}
+	a {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		text-decoration: none;
+		color: var(--text);
+	}
+	img {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		border-radius: 10px;
+		border: 1px solid var(--border);
+		transition: border-color 0.15s;
+	}
+	a:hover img {
+		border-color: var(--gold);
+	}
+	a:hover h2 {
+		color: var(--gold);
+	}
+	.eyebrow {
+		margin: 0 0 0.4rem;
+	}
+	h2 {
+		margin: 0 0 0.5rem;
+		font-size: 1.3rem;
+		transition: color 0.15s;
+	}
+	.description {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	@media (min-width: 800px) {
+		.featured a {
+			display: grid;
+			grid-template-columns: 1.3fr 1fr;
+			align-items: center;
+			gap: 2rem;
+		}
+		.featured h2 {
+			font-size: 1.8rem;
+		}
+	}
+</style>

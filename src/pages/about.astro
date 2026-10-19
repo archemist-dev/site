@@ -1,0 +1,60 @@
+---
+import Subscribe from '../components/Subscribe.astro';
+import { LINKS } from '../consts';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About" description="Hi, I'm Javlon, a solutions architect. Every week I test one thing engineers repeat and write down what I'd actually decide.">
+	<div class="prose">
+		<h1>About</h1>
+		<div class="rule"></div>
+		<p class="lead">Hi, I'm Javlon, a solutions architect at a food-delivery platform.</p>
+		<p>
+			For years I tried to write perfect code. Clean, clever, ready for every future. Most of that future never
+			came. It took me too long to learn that architecture isn't about the perfect design. It's about a decision
+			you can live with, and knowing what it costs.
+		</p>
+		<p>
+			That's what Archemist is. Every week I take one thing engineers repeat ("Protobuf is faster", "extract the
+			core service first"), test it with code you can run yourself, and write down what I'd actually decide.
+		</p>
+		<p>
+			I'm not a guru. I read the books, break things on cheap cloud servers and share what survives. If I got
+			something wrong, tell me. That's how this gets better.
+		</p>
+
+		<h2>What you'll find</h2>
+		<ul>
+			<li><strong>Under the Hood</strong>: databases, encodings and data internals.</li>
+			<li><strong>Architecture in Production</strong>: monoliths, services and the messy middle.</li>
+			<li><strong>System Design</strong>: judgment calls and what breaks after the whiteboard.</li>
+			<li><strong>AI Engineering</strong>: AI systems and tools, judged by an architect.</li>
+			<li><strong>Career</strong>: seniority, growth paths and how architects work.</li>
+		</ul>
+
+		<h2>Tests you can re-run</h2>
+		<p>
+			Every number in an article comes from a script in the <a href={LINKS.github}>labs repository</a>: pinned
+			dependencies, synthetic data, run on a named cloud server. Clone it and check the results yourself.
+		</p>
+
+		<h2>Contact</h2>
+		<p>
+			<a href={LINKS.email}>hello@archemist.dev</a>. Short videos in English on YouTube; the same diagrams in Uzbek
+			and Russian on Telegram.
+		</p>
+
+		<Subscribe />
+	</div>
+</Base>
+
+<style>
+	.prose {
+		max-width: var(--measure);
+		margin: 0 auto;
+		padding-top: 1.5rem;
+	}
+	.lead {
+		font-size: 1.15rem;
+	}
+</style>

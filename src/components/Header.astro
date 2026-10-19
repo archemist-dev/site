@@ -1,0 +1,67 @@
+---
+import Logo from '../assets/logo.svg';
+
+const path = Astro.url.pathname;
+const nav = [
+	{ href: '/articles/', label: 'Articles' },
+	{ href: '/about/', label: 'About' },
+];
+---
+
+<header>
+	<nav>
+		<a class="brand" href="/" aria-label="Archemist home">
+			<Logo width={36} height={36} aria-hidden="true" />
+			<span class="mono">ARCHEMIST</span>
+		</a>
+		<div class="links">
+			{nav.map((item) => (
+				<a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+					{item.label}
+				</a>
+			))}
+		</div>
+	</nav>
+</header>
+
+<style>
+	header {
+		border-bottom: 1px solid var(--border);
+	}
+	nav {
+		max-width: var(--wide);
+		margin: 0 auto;
+		padding: 0.9rem 16px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	a {
+		text-decoration: none;
+	}
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+	}
+	.brand span {
+		color: var(--gold);
+		font-weight: 700;
+		letter-spacing: 0.22em;
+		font-size: 0.9rem;
+	}
+	.links {
+		display: flex;
+		gap: 1.4rem;
+		font-size: 0.95rem;
+		font-weight: 600;
+	}
+	.links a {
+		color: var(--muted);
+	}
+	.links a:hover,
+	.links a[aria-current='page'] {
+		color: var(--text);
+	}
+</style>

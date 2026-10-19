@@ -1,0 +1,70 @@
+---
+import { type CollectionEntry, render } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Subscribe from '../../components/Subscribe.astro';
+import { PILLARS } from '../../consts';
+import Base from '../../layouts/Base.astro';
+import { getArticles, readingMinutes } from '../../lib/articles';
+
+export async function getStaticPaths() {
+	const articles = await getArticles();
+	return articles.map((article) => ({ params: { slug: article.id }, props: { article } }));
+}
+
+interface Props {
+	article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const { title, description, pubDate, pillar, cover, coverAlt, linkedin, draft } = article.data;
+const { Content } = await render(article);
+---
+
+<Base title={title} description={description} image={cover} imageAlt={coverAlt} article={{ pubDate }}>
+	<article>
+		<header>
+			<p class="eyebrow">
+				<FormattedDate date={pubDate} /> · {PILLARS[pillar] ?? pillar} · {readingMinutes(article.body)} min read{draft && ' · DRAFT'}
+			</p>
+			<h1>{title}</h1>
+			<div class="rule"></div>
+		</header>
+		<div class="prose">
+			<Content />
+			<Subscribe linkedin={linkedin} />
+		</div>
+	</article>
+</Base>
+
+<style>
+	header,
+	.prose {
+		max-width: var(--measure);
+		margin: 0 auto;
+	}
+	header {
+		padding-top: 1.5rem;
+		margin-bottom: 2rem;
+	}
+	header .eyebrow {
+		margin: 0 0 0.8rem;
+	}
+	.prose :global(img) {
+		width: 100%;
+		border-radius: 10px;
+		border: 1px solid var(--border);
+		margin: 2rem 0;
+	}
+	.prose :global(h2) {
+		margin-top: 2.4em;
+	}
+	.prose :global(h2::after) {
+		content: '';
+		display: block;
+		width: 40px;
+		height: 3px;
+		margin-top: 0.5rem;
+		border-radius: 2px;
+		background: var(--gold);
+	}
+</style>
