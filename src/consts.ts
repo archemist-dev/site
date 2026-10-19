@@ -5,7 +5,8 @@ export const SITE_DESCRIPTION =
 
 // Empty links are hidden.
 export const LINKS = {
-	newsletter: '', // TODO: LinkedIn newsletter URL (Archemist)
+	newsletter: 'https://www.linkedin.com/newsletters/archemist-7515464939281547264/',
+	subscribe: 'https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7515464939281547264',
 	youtube: 'https://www.youtube.com/@archemist_dev',
 	telegram: 'https://t.me/archemist_dev',
 	x: 'https://x.com/archemist_dev',
