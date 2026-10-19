@@ -5,8 +5,9 @@ pubDate: "2026-10-19"
 pillar: "architecture"
 cover: "./cover.png"
 coverAlt: "Archemist logo, a flask with a small system diagram in gold liquid, next to the title: Want orders out of the monolith? Don't start with orders. Free them. Which service to extract first, tested on a model."
+linkedin: "https://www.linkedin.com/pulse/want-orders-out-monolith-dont-start-free-them-javlon-tulkinov-mhuaf"
 labs: "https://github.com/archemist-dev/labs/tree/main/02-extract-first"
-draft: true
+draft: false
 ---
 
 The most important service is usually the wrong one to extract first.
