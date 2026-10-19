@@ -17,17 +17,19 @@ npm run build    # static site in dist/, drafts left out
 Articles are not written here. They come from the Archemist vault:
 
 ```sh
-npm run sync                                  # every paste-ready note
+npm run sync                                  # every published paste-ready note
 npm run sync -- "Your Payload Is Too Big"     # one topic
+npm run sync -- --drafts                      # unpublished ones too, as drafts (local preview only, don't commit)
 ```
 
-The script reads `<topic> - paste-ready.md` (title, cover, body, `[IMAGE n]` markers with alt text) and its master note (`publish_date`, `pillar`, LinkedIn URL), then writes `src/content/articles/<slug>/` with the images. Nothing else leaves the vault.
+The script reads `<topic> - paste-ready.md` (title, cover, body, `[IMAGE n]` markers with alt text) and its master note (`publish_date`, `pillar`, LinkedIn URL), then writes `src/content/articles/<slug>/` (text and cover) and `public/articles/<slug>/` (diagrams). Nothing else leaves the vault.
 
+- **Published = has a LinkedIn URL:** a topic without the LinkedIn article URL in its master note is skipped, so its text never reaches this public repo early.
 - **Slug:** the labs folder name without its number (`01-payload-encoding` → `/articles/payload-encoding/`), or `--slug <slug>`.
-- **Draft until published:** an article stays a draft until its master note holds the LinkedIn article URL. Re-run the sync after the link is recorded.
+- **Diagrams are plain PNGs with absolute URLs** in the built pages (`scripts/absolute-images.mjs` runs after `astro build`), so Medium's "Import a story" picks them up.
 - **Vault path:** `../../Archemist` by default; set `ARCHEMIST_VAULT` if it lives elsewhere.
 
-Then branch, commit, open a PR. Cloudflare builds a preview for the PR; merging publishes.
+Normally this runs by itself: the vault's `publish-site` GitHub Action syncs on every vault merge that touches `Topics/`, `Published/` or `Diagrams/`, then opens and merges a PR here. By hand: branch, commit, open a PR, merge. A merge to `main` deploys in about a minute.
 
 ## Layout
 
