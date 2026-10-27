@@ -5,7 +5,7 @@ import { Font, getImage } from 'astro:assets';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import DefaultImage from '../assets/og-default.png';
-import { SITE_TITLE } from '../consts';
+import { LINKS, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 interface Props {
 	title?: string;
@@ -19,6 +19,38 @@ const { title, description, image, imageAlt, article } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE_TITLE}` : `${SITE_TITLE}: software architecture, tested`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = await getImage({ src: image ?? DefaultImage, format: 'png', width: image ? 1200 : 512 });
+const ogImageURL = new URL(ogImage.src, Astro.site);
+
+// Structured data for search engines: an article gets BlogPosting, every other page the site itself.
+const author = { '@type': 'Person', name: 'Javlon', url: new URL('/about/', Astro.site) };
+const publisher = {
+	'@type': 'Organization',
+	name: SITE_TITLE,
+	url: Astro.site,
+	logo: new URL('/apple-touch-icon.png', Astro.site),
+	sameAs: [LINKS.newsletter, LINKS.youtube, LINKS.x, LINKS.threads, LINKS.telegram, LINKS.medium, LINKS.github].filter(Boolean),
+};
+const jsonLd = article
+	? {
+			'@context': 'https://schema.org',
+			'@type': 'BlogPosting',
+			headline: title,
+			description,
+			image: ogImageURL,
+			datePublished: article.pubDate.toISOString(),
+			url: canonicalURL,
+			mainEntityOfPage: canonicalURL,
+			author,
+			publisher,
+		}
+	: {
+			'@context': 'https://schema.org',
+			'@type': 'WebSite',
+			name: SITE_TITLE,
+			description: SITE_DESCRIPTION,
+			url: Astro.site,
+			publisher,
+		};
 ---
 
 <!doctype html>
@@ -45,11 +77,18 @@ const ogImage = await getImage({ src: image ?? DefaultImage, format: 'png', widt
 		<meta property="og:url" content={canonicalURL} />
 		<meta property="og:title" content={title ?? SITE_TITLE} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content={new URL(ogImage.src, Astro.site)} />
+		<meta property="og:image" content={ogImageURL} />
+		<meta property="og:image:width" content={String(ogImage.attributes.width)} />
+		<meta property="og:image:height" content={String(ogImage.attributes.height)} />
 		{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
 		{article && <meta property="article:published_time" content={article.pubDate.toISOString()} />}
+		<meta name="author" content="Javlon" />
 		<meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
 		<meta name="twitter:site" content="@archemist_dev" />
+		<meta name="twitter:title" content={title ?? SITE_TITLE} />
+		<meta name="twitter:description" content={description} />
+		{imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 	</head>
 	<body>
 		<Header />
