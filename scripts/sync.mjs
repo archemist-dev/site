@@ -6,9 +6,10 @@
 //   npm run sync -- --drafts             also unpublished ones, as drafts (local preview; don't commit)
 //
 // Source: "<topic> - paste-ready.md" (title, cover, body with [IMAGE n] markers) and the
-// master note next to it (publish_date, pillar, LinkedIn URL). Nothing else leaves the vault.
-// An article is published once its master note holds the LinkedIn article URL; before that
-// it is skipped, so its text never reaches the public repo early.
+// master note next to it (publish_date, pillar, site flag, LinkedIn URL). Nothing else leaves the vault.
+// An article is published once its master note says `site: ready` in the frontmatter (the site goes
+// first, LinkedIn after) or holds the LinkedIn article URL; before that it is skipped, so its text
+// never reaches the public repo early.
 // Diagrams go to public/articles/<slug>/ as plain PNGs (Medium's importer needs real image URLs).
 // Vault path: ARCHEMIST_VAULT, or ../../Archemist from this repo.
 
@@ -59,8 +60,9 @@ function syncTopic({ dir, file }) {
 	const labs = body.match(/https:\/\/github\.com\/archemist-dev\/labs\/tree\/main\/[\w.-]+/)?.[0];
 	const slug = slugArg ?? (labs ? basename(labs).replace(/^\d+-/, '') : kebab(topic));
 	if (!meta.publish_date) fail(`${master.file}: no publish_date.`);
-	if (!linkedin && !drafts) {
-		console.log(`skip   ${topic} (no LinkedIn URL yet)`);
+	const ready = String(meta.site ?? '').trim() === 'ready' || Boolean(linkedin);
+	if (!ready && !drafts) {
+		console.log(`skip   ${topic} (not site: ready, no LinkedIn URL yet)`);
 		return;
 	}
 
@@ -109,7 +111,7 @@ function syncTopic({ dir, file }) {
 		coverAlt,
 		...(linkedin && { linkedin }),
 		...(labs && { labs }),
-		draft: !linkedin,
+		draft: !ready,
 	};
 	const yaml = Object.entries(data)
 		.map(([key, value]) => `${key}: ${typeof value === 'boolean' ? value : JSON.stringify(value)}`)
