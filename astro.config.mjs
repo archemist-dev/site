@@ -41,7 +41,7 @@ export default defineConfig({
 			provider: fontProviders.google(),
 			name: 'Source Serif 4',
 			cssVariable: '--font-serif',
-			weights: [400, 600],
+			weights: ['200 900'],
 			styles: ['normal', 'italic'],
 			fallbacks: ['Georgia', 'serif'],
 		},

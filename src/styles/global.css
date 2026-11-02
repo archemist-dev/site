@@ -23,6 +23,9 @@ html {
 	font-size: 18px;
 	line-height: 1.65;
 	-webkit-text-size-adjust: 100%;
+	/* Light text on charcoal renders heavy on macOS without this. */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -136,8 +139,16 @@ img {
 .prose {
 	font-family: var(--font-serif);
 	font-size: 1.15rem;
+	font-weight: 350;
 	line-height: 1.7;
 	color: var(--body);
+}
+
+/* Bold must stand out from the lighter body text. */
+.prose strong,
+.prose b {
+	font-weight: 700;
+	color: var(--text);
 }
 
 .prose h1,
