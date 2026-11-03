@@ -5,6 +5,7 @@ pubDate: "2026-11-02"
 pillar: "under-the-hood"
 cover: "./cover.png"
 coverAlt: "Title: Same request. 0.3 s, then 0.9 s. Same bytes, nothing broken. Two bars to scale, Sydney to a server in Frankfurt: a reused connection, request out, 4.8 ms of server work, response back; a new connection with TCP and TLS setup first, then the same request. Archemist logo in the corner."
+linkedin: "https://www.linkedin.com/pulse/why-same-request-fast-slow-how-fix-javlon-tulkinov-xji3f"
 labs: "https://github.com/archemist-dev/labs/tree/main/04-response-time"
 draft: false
 ---
