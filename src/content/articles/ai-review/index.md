@@ -5,6 +5,7 @@ pubDate: "2026-11-09"
 pillar: "ai"
 cover: "./cover.png"
 coverAlt: "Title: Same bug. Same AI reviewer. Two code cards with the same line, discount = 10% of (items + delivery). Top card has the comment \"promo: item subtotal only\": blocked 3 of 3, AI says \"breaks the written terms\". Bottom card, comment deleted: missed 3 of 3, AI says \"a business decision\". Claude Code review, 3 runs each. Archemist logo in the corner."
+linkedin: "https://www.linkedin.com/pulse/your-ai-reviewer-only-knows-rules-you-wrote-down-javlon-tulkinov-n1oxf"
 labs: "https://github.com/archemist-dev/labs/tree/main/05-ai-review"
 draft: false
 ---
