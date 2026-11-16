@@ -5,6 +5,7 @@ pubDate: "2026-11-16"
 pillar: "system-design"
 cover: "./cover.png"
 coverAlt: "The Saga pattern, in plain words: two checkout flows. Retry: paid £11.99, order #1, reply lost, retry, order #2, a double order. Order first: order PENDING, charge with a key, CONFIRMED, one order and 0 refunds."
+linkedin: "https://www.linkedin.com/pulse/your-payment-succeeded-order-failed-now-what-javlon-tulkinov-qix2f"
 labs: "https://github.com/archemist-dev/labs/tree/main/07-saga-compensation"
 draft: false
 ---
