@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { article } = Astro.props;
-const { title, description, pubDate, pillar, cover, coverAlt, linkedin, draft } = article.data;
+const { title, description, pubDate, pillar, cover, coverAlt, linkedin, video, draft } = article.data;
 const { Content } = await render(article);
 ---
 
@@ -29,6 +29,21 @@ const { Content } = await render(article);
 			<h1>{title}</h1>
 			<div class="rule"></div>
 		</header>
+		{
+			video && (
+				<figure class="video">
+					<iframe
+						src={`https://www.youtube-nocookie.com/embed/${video}`}
+						title={`Video: ${title}`}
+						loading="lazy"
+						allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						referrerpolicy="strict-origin-when-cross-origin"
+						allowfullscreen
+					/>
+					<figcaption>The test on video</figcaption>
+				</figure>
+			)
+		}
 		<div class="prose">
 			<Content />
 			<Subscribe linkedin={linkedin} />
@@ -48,6 +63,24 @@ const { Content } = await render(article);
 	}
 	header .eyebrow {
 		margin: 0 0 0.8rem;
+	}
+	.video {
+		max-width: var(--measure);
+		margin: 0 auto 2.2rem;
+	}
+	.video iframe {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: #000;
+	}
+	.video figcaption {
+		margin-top: 0.6rem;
+		font-family: var(--font-mono, monospace);
+		font-size: 0.85rem;
+		color: var(--muted, #8a8f98);
 	}
 	.prose :global(img) {
 		width: 100%;

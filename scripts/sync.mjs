@@ -57,6 +57,8 @@ function syncTopic({ dir, file }) {
 	const body = source.slice(source.search(/^---\s*$/m)).replace(/^---\s*$/m, '');
 
 	const linkedin = master.text.match(/https:\/\/www\.linkedin\.com\/pulse\/[^\s)>\]]+/)?.[0];
+	// A long video on YouTube: `video: <url>` in the master note's frontmatter; the page embeds it under the title.
+	const video = String(meta.video ?? '').match(/(?:youtu\.be\/|[?&]v=|\/embed\/)([\w-]{11})/)?.[1];
 	const labs = body.match(/https:\/\/github\.com\/archemist-dev\/labs\/tree\/main\/[\w.-]+/)?.[0];
 	const slug = slugArg ?? (labs ? basename(labs).replace(/^\d+-/, '') : kebab(topic));
 	if (!meta.publish_date) fail(`${master.file}: no publish_date.`);
@@ -111,6 +113,7 @@ function syncTopic({ dir, file }) {
 		coverAlt,
 		...(linkedin && { linkedin }),
 		...(labs && { labs }),
+		...(video && { video }),
 		draft: !ready,
 	};
 	const yaml = Object.entries(data)
