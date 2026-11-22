@@ -7,6 +7,7 @@ cover: "./cover.png"
 coverAlt: "Archemist logo, a flask with a small system diagram in gold liquid, next to the title: Your payload is too big. That's not your real problem. JSON vs Protobuf vs Avro, tested on AWS t3.micro."
 linkedin: "https://www.linkedin.com/pulse/your-payload-too-big-thats-real-problem-json-vs-avro-tested-tulkinov-ajlvf"
 labs: "https://github.com/archemist-dev/labs/tree/main/01-payload-encoding"
+video: "UEPk92IxtPI"
 draft: false
 ---
 
