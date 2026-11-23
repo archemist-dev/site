@@ -60,6 +60,31 @@ const jsonLd = article
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<meta name="theme-color" content="#1b1d21" media="(prefers-color-scheme: dark)" />
 		<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+		<script is:inline>
+			// Theme: "light" | "dark" | system (nothing saved). Runs before paint, so no flash.
+			(() => {
+				const DARK = '(prefers-color-scheme: dark)';
+				const apply = (theme) => {
+					const root = document.documentElement;
+					if (theme === 'light' || theme === 'dark') root.dataset.theme = theme;
+					else delete root.dataset.theme;
+					// Diagram pairs: <picture> with a dark <source>; forced modes override the device setting.
+					const media = theme === 'dark' ? 'all' : theme === 'light' ? 'not all' : DARK;
+					document.querySelectorAll('picture > source').forEach((source) => (source.media = media));
+					document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+						meta.dataset.media ??= meta.media;
+						meta.media = theme ? (meta.content === '#ffffff') === (theme === 'light') ? 'all' : 'not all' : meta.dataset.media;
+					});
+				};
+				let saved = null;
+				try {
+					saved = localStorage.getItem('theme');
+				} catch {}
+				window.archemistTheme = { saved, apply };
+				apply(saved);
+				document.addEventListener('DOMContentLoaded', () => apply(window.archemistTheme.saved));
+			})();
+		</script>
 		<link rel="icon" href="/favicon.ico" sizes="any" />
 		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
