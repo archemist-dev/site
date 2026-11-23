@@ -4,7 +4,7 @@ description: "At a marketplace app, writes stopped one day. The managed database
 pubDate: "2026-11-23"
 pillar: "under-the-hood"
 cover: "./cover.png"
-coverAlt: "Nobody inserted. The table grew 2.8x. Line chart over 60 minutes while one slow report runs: the table grows from 120 to 337 MB; with nothing held it stays at 122 MB."
+coverAlt: "Nobody inserted. The table grew 2.8x. One slow read for 60 minutes, then disk full and the database read-only. The table file drawn as 4 MB boxes: before, 120 MB of rows; after, 337 MB with 210 MB of it empty."
 labs: "https://github.com/archemist-dev/labs/tree/main/08-table-bloat"
 draft: false
 ---
