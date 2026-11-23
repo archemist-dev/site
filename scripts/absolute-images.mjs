@@ -10,5 +10,5 @@ const DIST = join(import.meta.dirname, '..', 'dist', 'articles');
 for (const slug of readdirSync(DIST, { withFileTypes: true }).filter((entry) => entry.isDirectory())) {
 	const page = join(DIST, slug.name, 'index.html');
 	const html = readFileSync(page, 'utf8');
-	writeFileSync(page, html.replaceAll('src="/articles/', `src="${SITE}/articles/`));
+	writeFileSync(page, html.replaceAll('src="/articles/', `src="${SITE}/articles/`).replaceAll('srcset="/articles/', `srcset="${SITE}/articles/`));
 }
