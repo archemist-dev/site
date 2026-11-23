@@ -1,7 +1,8 @@
 /* Archemist brand: charcoal, off-white, gold only for lines and small accents.
-   Follows the reader's device: dark by default, light when the device asks for it. */
+   Theme: the reader's device setting (dark by default), unless the header switcher sets
+   data-theme="light" or "dark" on <html> (saved in localStorage, applied before paint in Base.astro). */
 :root {
-	color-scheme: dark light;
+	color-scheme: dark;
 	--bg: #1b1d21;
 	--surface: #23262b;
 	--border: #31353b;
@@ -14,7 +15,7 @@
 }
 
 @media (prefers-color-scheme: light) {
-	:root {
+	:root:not([data-theme='dark']) {
 		color-scheme: light;
 		--bg: #ffffff;
 		--surface: #f6f5f2;
@@ -23,6 +24,16 @@
 		--body: #2b2e33;
 		--muted: #5f6670;
 	}
+}
+
+:root[data-theme='light'] {
+	color-scheme: light;
+	--bg: #ffffff;
+	--surface: #f6f5f2;
+	--border: #e3e1dc;
+	--text: #1b1d21;
+	--body: #2b2e33;
+	--muted: #5f6670;
 }
 
 * {
