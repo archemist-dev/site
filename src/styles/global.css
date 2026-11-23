@@ -1,6 +1,7 @@
-/* Archemist brand: charcoal, off-white, gold only for lines and small accents. */
+/* Archemist brand: charcoal, off-white, gold only for lines and small accents.
+   Follows the reader's device: dark by default, light when the device asks for it. */
 :root {
-	color-scheme: dark;
+	color-scheme: dark light;
 	--bg: #1b1d21;
 	--surface: #23262b;
 	--border: #31353b;
@@ -10,6 +11,18 @@
 	--gold: #d4a017;
 	--measure: 680px;
 	--wide: 1080px;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		color-scheme: light;
+		--bg: #ffffff;
+		--surface: #f6f5f2;
+		--border: #e3e1dc;
+		--text: #1b1d21;
+		--body: #2b2e33;
+		--muted: #5f6670;
+	}
 }
 
 * {
@@ -127,6 +140,10 @@ hr {
 	border: 0;
 	border-top: 1px solid var(--border);
 	margin: 2.5em 0;
+}
+
+picture {
+	display: block;
 }
 
 img {

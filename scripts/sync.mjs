@@ -85,7 +85,21 @@ function syncTopic({ dir, file }) {
 			if (!altLine) fail(`${file}: no "Alt text:" line under ${lines[i]}`);
 			const name = imageName(image[1]);
 			copyImage(image[1], join(images, name));
-			out.push(`![${altLine[1].replace(/[[\]]/g, '')}](/articles/${slug}/${name})`);
+			// "<name> Light.png" next to it: light is the default (Medium imports it), dark when the reader's device is dark.
+			const lightPath = image[1].replace(/\.png$/, ' Light.png');
+			if (existsSync(join(VAULT, lightPath))) {
+				const lightName = name.replace(/\.png$/, '-light.png');
+				copyImage(lightPath, join(images, lightName));
+				const alt = altLine[1].replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+				out.push(
+					'<picture>',
+					`<source media="(prefers-color-scheme: dark)" srcset="/articles/${slug}/${name}">`,
+					`<img src="/articles/${slug}/${lightName}" alt="${alt}">`,
+					'</picture>',
+				);
+			} else {
+				out.push(`![${altLine[1].replace(/[[\]]/g, '')}](/articles/${slug}/${name})`);
+			}
 			i++;
 			continue;
 		}

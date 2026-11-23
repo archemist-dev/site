@@ -5,6 +5,7 @@ pubDate: "2026-11-23"
 pillar: "under-the-hood"
 cover: "./cover.png"
 coverAlt: "Nobody inserted. The table grew 2.8x. One slow read for 60 minutes, then disk full and the database read-only. The table file drawn as 4 MB boxes: before, 120 MB of rows; after, 337 MB with 210 MB of it empty."
+linkedin: "https://www.linkedin.com/pulse/your-table-grows-while-nobody-inserts-javlon-tulkinov-tumsf/"
 labs: "https://github.com/archemist-dev/labs/tree/main/08-table-bloat"
 draft: false
 ---
@@ -19,7 +20,10 @@ Postgres lets readers and writers use the same rows at the same time without wai
 
 Cleanup, called vacuum, removes dead versions, but only the ones no running query could still need. A query reads the database as it was when it started (its snapshot), so every version that died after that moment has to stay until the query ends. Autovacuum runs vacuum in the background, and on a busy table it keeps up all day. One slow query is enough to stop it.
 
-![Old row versions left by updates, per minute. Before the report starts, cleanup removes them. After it starts, they pile up, about 30,000 a minute, kept until the report ends.](/articles/table-bloat/1-versions.png)
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="/articles/table-bloat/1-versions.png">
+<img src="/articles/table-bloat/1-versions-light.png" alt="Old row versions left by updates, per minute. Before the report starts, cleanup removes them. After it starts, they pile up, about 30,000 a minute, kept until the report ends.">
+</picture>
 
 ## One report, one hour
 
@@ -29,7 +33,10 @@ Then one report read the table once and kept its snapshot open for an hour, like
 
 Autovacuum ran 235 times during that hour. It removed nothing. Every status change made after the report started left a dead version that had to stay: about 1.8M of them by the end.
 
-![One report open for 60 minutes at 500 order updates a second: old row versions climb to 1.8M while cleanup runs 235 times and cleans nothing. With no long report, they stay steady.](/articles/table-bloat/2-growth.png)
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="/articles/table-bloat/2-growth.png">
+<img src="/articles/table-bloat/2-growth-light.png" alt="One report open for 60 minutes at 500 order updates a second: old row versions climb to 1.8M while cleanup runs 235 times and cleans nothing. With no long report, they stay steady.">
+</picture>
 
 The table grew from 120 to 337 MB and its indexes from 28 to 61 MB. With nothing held, they ended at 122 and 35.
 
@@ -41,7 +48,10 @@ Within a minute of the report ending, autovacuum removed the dead rows. The file
 
 Empty space still gets read. Postgres stores a table in 8 KB pages, and a scan reads every page, empty or not. A filter on an unindexed column, the kind an admin panel runs, read 43,080 pages instead of 15,589 and took about 3x as long. A lookup by id didn't notice: 7 pages before and after. Scans and range filters pay; point lookups don't.
 
-![The orders table file drawn as 4 MB boxes. No long report: 122 MB, all pages with rows, a scan reads 15,589 pages. After the report: 337 MB, 210 MB of it empty pages that are still read, a scan reads 43,080 pages.](/articles/table-bloat/4-after.png)
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="/articles/table-bloat/4-after.png">
+<img src="/articles/table-bloat/4-after-light.png" alt="The orders table file drawn as 4 MB boxes. No long report: 122 MB, all pages with rows, a scan reads 15,589 pages. After the report: 337 MB, 210 MB of it empty pages that are still read, a scan reads 43,080 pages.">
+</picture>
 
 ## How a search took the database read-only
 
@@ -64,7 +74,10 @@ Anything that holds an old snapshot does the same:
 
 I ran each fix against the same load, with the snapshot held for 10 minutes. With nothing held, the table grew 2 MB. A slow report or an idle transaction grew it 36 MB.
 
-![Table growth in 10 minutes, starting at 120 MB. Grows the table: a slow report on the primary +36 MB, a forgotten open transaction +36, the report moved to a replica with feedback on (the primary keeps old rows for it) +37. Stops it: ending idle transactions after 60 s +4, ending slow queries after 60 s +4, the report on a replica with feedback off +2, where the replica cancels the report. No long report: +2.](/articles/table-bloat/3-fixes.png)
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="/articles/table-bloat/3-fixes.png">
+<img src="/articles/table-bloat/3-fixes-light.png" alt="Table growth in 10 minutes, starting at 120 MB. Grows the table: a slow report on the primary +36 MB, a forgotten open transaction +36, the report moved to a replica with feedback on (the primary keeps old rows for it) +37. Stops it: ending idle transactions after 60 s +4, ending slow queries after 60 s +4, the report on a replica with feedback off +2, where the replica cancels the report. No long report: +2.">
+</picture>
 
 1. **Close idle transactions.** Set `idle_in_transaction_session_timeout` on every app role. At 60 s, the table grew 4 MB instead of 36. An idle transaction does no useful work, so this is the cheapest fix there is. On PostgreSQL 17+, `transaction_timeout` limits the whole transaction too.
 2. **Limit statements per role.** A 60 s `statement_timeout` did the same for the slow report: 4 MB instead of 36. Make it short for the app and the admin panel and longer for migrations and batch jobs, per role, not for the whole server.
